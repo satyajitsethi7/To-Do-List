@@ -4,9 +4,9 @@ function App() {
   return (
     <>
     <Navbar/>
-      <div className="container">
-        <div>
-          App
+      <div className="container mx-auto">
+        <div className="bg-violet-500">
+          <h1>Tasks</h1>
         </div>
       </div>
     </>
