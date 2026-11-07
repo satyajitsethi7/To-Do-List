@@ -31,13 +31,13 @@ A simple and responsive Todo application built using React and Tailwind CSS.
 1. Clone the repository:
 
    ```bash
-   git clone YOUR_REPOSITORY_URL
+   git clone https://github.com/satyajitsethi7/To-Do-List.git
    ```
 
 2. Navigate to the project folder:
 
    ```bash
-   cd YOUR_PROJECT_FOLDER
+   cd To-Do-List
    ```
 
 3. Install dependencies:
