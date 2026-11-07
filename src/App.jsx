@@ -6,7 +6,7 @@ import { MdDelete } from "react-icons/md";
 
 function App() {
   const [todo, setTodo] = useState("");
-  const [todos, setTodos] = useState(()=> {
+  const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem("todos");
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
@@ -27,10 +27,9 @@ function App() {
   //   localStorage.setItem("todos", JSON.stringify(todos));
   // };
 
-  const toggleFinished =() => {
+  const toggleFinished = () => {
     setShowFinished(!showFinished);
-  }
-  
+  };
 
   const handleEdit = (e, id) => {
     let t = todos.filter((i) => i.id === id);
@@ -63,20 +62,23 @@ function App() {
   };
 
   const handleCheckbox = (e) => {
-    let id = e.target.name;
-    let index = todos.findIndex((item) => {
-      return item.id === id;
+    const id = e.target.name;
+    const newTodos = todos.map((item) => {
+      if (item.id === id) {
+        return { ...item, isCompleted: !item.isCompleted };
+      }
+      return item;
     });
-    let newTodos = [...todos];
-    newTodos[index].isCompleted = !newTodos[index].isCompleted;
     setTodos(newTodos);
     // saveToLs();
   };
   return (
     <>
       <Navbar />
-      <div className="md:container mx-auto my-5 bg-mist-900 text-purple-500 p-5 rounded-2xl min-h-[80vh] md:w-1/2">
-      <h1 className="font-bold text-center text-xl my-5">todo. - Manage your todos at one place</h1>
+      <div className="md:container bg-[#12121e] mx-auto my-5 border border-white/10 shadow-xl text-purple-500 p-5 rounded-2xl min-h-[80vh]  md:w-1/2">
+        <h1 className="font-bold text-center text-xl my-5">
+          todo. - Manage your todos at one place
+        </h1>
         <div className="addTodo mb-5">
           <div className="heading">
             <h2 className="text-lg font-bold">Add a Todo</h2>
@@ -86,58 +88,69 @@ function App() {
               onChange={handleChange}
               value={todo}
               type="text"
-              className="bg-mist-200 rounded-md w-full h-9 text-black pl-2"
+              className="bg-[#1b1b2a] border border-white/10 rounded-md text-white outline-none focus:border-purple-500 drop-shadow-2xl  w-full h-9 transition-all pl-2"
             />
             <button
-            disabled={todo.length<=3}
+              disabled={todo.length <= 3}
               onClick={handleAdd}
-              className="bg-purple-600 disabled:bg-purple-950 hover:bg-purple-950 transition-all text-white rounded-sm px-3 py-2 text-sm font-bold"
+              className=" shadow-2xl bg-purple-600 disabled:bg-purple-950 disabled:text-gray-500 hover:bg-purple-700 transition-all text-white rounded-md px-3 py-2 text-sm font-bold"
             >
               Save
             </button>
           </div>
         </div>
-        <input onChange={toggleFinished} type="checkbox" checked={showFinished} /> Show Completed Tasks
+        <label className="cursor-pointer py-2 block-auto">
+        <input
+          onChange={toggleFinished}
+          type="checkbox"
+          checked={showFinished}
+          className="cursor-pointer accent-purple-400 w-4 h-4"
+        />{" "}
+        Show Completed Tasks
+        </label>
         <h2 className="text-lg font-bold">Your Todos</h2>
         <div className="todos my-3">
           {todos.length == 0 && (
             <div className="flex justify-center p-10">No Todos to display </div>
           )}
           {todos.map((item) => {
-            return (showFinished||!item.isCompleted) && (
-              <div
-                key={item.id}
-                className="todo my-3 flex justify-between items-center p-2 bg-mist-200 rounded-sm"
-              >
-                <div className="text text-black flex gap-3">
-                  <input
-                    onChange={handleCheckbox}
-                    type="checkbox"
-                    checked={item.isCompleted}
-                    name={item.id}
-                    id=""
-                  />
-                  <div className={item.isCompleted ? "line-through" : ""}>
-                    {item.todo}
+            return (
+              (showFinished || !item.isCompleted) && (
+                <div
+                  key={item.id}
+                  className="todo my-3 flex justify-between items-center p-2  rounded-md border bg-[#181828] border-white/10"
+                >
+                  <div className="text text-mist-300 flex items-center gap-2">
+                    <input
+                      onChange={handleCheckbox}
+                      type="checkbox"
+                      checked={item.isCompleted}
+                      name={item.id}
+                      id=""
+                      className="cursor-pointer w-4 h-4 accent-purple-400"
+                    />
+                    <div className={item.isCompleted ? "line-through" : ""}>
+                      {item.todo}
+                    </div>
+                  </div>
+                  <div className="buttons flex">
+                    <button
+                      onClick={(e) => handleEdit(e, item.id)}
+                      className="bg-blue-500/10  hover:bg-blue-500 border border-blue-300/10 transition-all text-white rounded-lg px-4 py-3 mx-2 text-sm font-bold"
+                    >
+                      <MdEditSquare size={19}/>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        handleDelete(e, item.id);
+                      }}
+                      className="bg-red-500/10 hover:bg-red-700 border border-red-300/10 transition-all text-white rounded-md px-4 py-3 mx-2 text-sm font-bold"
+                    >
+                      <MdDelete size={19} />
+                    </button>
                   </div>
                 </div>
-                <div className="buttons flex">
-                  <button
-                    onClick={(e) => handleEdit(e, item.id)}
-                    className="bg-purple-600  hover:bg-purple-950 transition-all text-white rounded-sm px-4 py-3 mx-2 text-sm font-bold"
-                  >
-                    <MdEditSquare />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      handleDelete(e, item.id);
-                    }}
-                    className="bg-purple-600 hover:bg-purple-950 transition-all text-white rounded-sm px-4 py-3 mx-2 text-sm font-bold"
-                  >
-                    <MdDelete />
-                  </button>
-                </div>
-              </div>
+              )
             );
           })}
         </div>
